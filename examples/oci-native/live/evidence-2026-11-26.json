@@ -1,0 +1,995 @@
+{
+  "artifact": {
+    "backend_transport": "real OCI HTTPS with normal certificate validation",
+    "boto3": "1.40.76",
+    "gateway_listener": "loopback HTTP; local SDK client only",
+    "jar_sha256": "d6e2affbf8e9c6b27e5334640911c94fe077bfc4e3a7db8767dc2a6daeb36232",
+    "oci_sdk": "2.160.0",
+    "product_commit": "875243f0119552eea04bd26abc5a4fd0f5bea2cc",
+    "python": "3.11.7",
+    "request_checksum_calculation": "when_required",
+    "response_checksum_validation": "when_required",
+    "runner_sha256": "f8cc10f1b2b5f17dd2af60f0cab2f1f61680af74cccd20ed0182ac02001e02a9",
+    "s3_signing_region": "us-east-1"
+  },
+  "cases": [
+    {
+      "duration_seconds": 1.665,
+      "expected": "allow",
+      "name": "reader-get-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "BE53201EAE247BDD",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:45.134243+00:00"
+    },
+    {
+      "duration_seconds": 0.943,
+      "expected": "allow",
+      "name": "reader-head-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "A3712749333E3657",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:46.080332+00:00"
+    },
+    {
+      "duration_seconds": 0.155,
+      "expected": "allow",
+      "name": "reader-list-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "F7AB666EC6EC8DB1",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:46.245827+00:00"
+    },
+    {
+      "code": "NoSuchKey",
+      "duration_seconds": 0.883,
+      "expected": "deny",
+      "name": "reader-put-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "95BFDF0AA4354BC1",
+      "status": 404,
+      "time_utc": "2026-11-26T17:31:47.139769+00:00"
+    },
+    {
+      "code": "NoSuchKey",
+      "duration_seconds": 0.586,
+      "expected": "deny",
+      "name": "reader-delete-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "88A406829E05A765",
+      "status": 404,
+      "time_utc": "2026-11-26T17:31:47.729613+00:00"
+    },
+    {
+      "duration_seconds": 0.578,
+      "expected": "allow",
+      "name": "seed-intact-after-reader-delete-denial",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "17B2809ACC0AD877",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:48.318333+00:00"
+    },
+    {
+      "code": "NoSuchKey",
+      "duration_seconds": 0.97,
+      "expected": "deny",
+      "name": "reader-protected-get-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "BA993A7A6CD446FA",
+      "status": 404,
+      "time_utc": "2026-11-26T17:31:49.311097+00:00"
+    },
+    {
+      "code": "NoSuchKey",
+      "duration_seconds": 0.951,
+      "expected": "deny",
+      "name": "writer-protected-get-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "05FCBC8FD6270F88",
+      "status": 404,
+      "time_utc": "2026-11-26T17:31:50.267260+00:00"
+    },
+    {
+      "code": "NoSuchKey",
+      "duration_seconds": 0.505,
+      "expected": "deny",
+      "name": "reader-multipart-initiate-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "AA9CF6545A00EB9F",
+      "status": 404,
+      "time_utc": "2026-11-26T17:31:50.777466+00:00"
+    },
+    {
+      "duration_seconds": 1.055,
+      "expected": "allow",
+      "name": "writer-put-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "EE8B5EBDD7EEB0D2",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:51.850751+00:00"
+    },
+    {
+      "duration_seconds": 0.599,
+      "expected": "allow",
+      "name": "writer-get-integrity",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "1ADC282E7846E117",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:52.460672+00:00"
+    },
+    {
+      "duration_seconds": 0.881,
+      "expected": "allow",
+      "name": "reader-range-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "13880836354071AC",
+      "status": 206,
+      "time_utc": "2026-11-26T17:31:53.352512+00:00"
+    },
+    {
+      "duration_seconds": 1.165,
+      "expected": "allow",
+      "name": "writer-conditional-put-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "32DEB663CBD86B1C",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:54.521390+00:00"
+    },
+    {
+      "code": "PreconditionFailed",
+      "expected_status": 412,
+      "name": "writer-conditional-conflict",
+      "outcome": "PASS",
+      "request_id": "D7D5CFA59C1BADC4",
+      "status": 412,
+      "time_utc": "2026-11-26T17:31:55.513140+00:00"
+    },
+    {
+      "duration_seconds": 2.189,
+      "expected": "allow",
+      "name": "writer-copy-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "8540BC4ED0A7C8CE",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:57.708253+00:00"
+    },
+    {
+      "duration_seconds": 0.49,
+      "expected": "allow",
+      "name": "writer-copy-integrity",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "120EA702B31F1FD2",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:58.202558+00:00"
+    },
+    {
+      "duration_seconds": 1.063,
+      "expected": "allow",
+      "name": "writer-multipart-initiate-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "047A591A1AB6635A",
+      "status": 200,
+      "time_utc": "2026-11-26T17:31:59.270708+00:00"
+    },
+    {
+      "code": "NoSuchUpload",
+      "duration_seconds": 0.948,
+      "expected": "deny",
+      "name": "reader-multipart-abort-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "5CB09E868CA9D30E",
+      "status": 404,
+      "time_utc": "2026-11-26T17:32:00.231589+00:00"
+    },
+    {
+      "duration_seconds": 17.292,
+      "expected": "allow",
+      "name": "writer-multipart-part1-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "26CA35BCD4CBE2EC",
+      "status": 200,
+      "time_utc": "2026-11-26T17:32:17.527414+00:00"
+    },
+    {
+      "duration_seconds": 1.206,
+      "expected": "allow",
+      "name": "writer-multipart-part2-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "B17D41BC9114483B",
+      "status": 200,
+      "time_utc": "2026-11-26T17:32:18.734972+00:00"
+    },
+    {
+      "duration_seconds": 0.415,
+      "expected": "allow",
+      "name": "writer-multipart-list-parts-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "7145CE3B3729C88D",
+      "status": 200,
+      "time_utc": "2026-11-26T17:32:19.162130+00:00"
+    },
+    {
+      "duration_seconds": 1.079,
+      "expected": "allow",
+      "name": "writer-multipart-complete-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "F6F9D818A09D07B4",
+      "status": 200,
+      "time_utc": "2026-11-26T17:32:20.246779+00:00"
+    },
+    {
+      "duration_seconds": 3.039,
+      "expected": "allow",
+      "name": "multipart-roundtrip-integrity",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "DA16AED699503BBD",
+      "status": 200,
+      "time_utc": "2026-11-26T17:32:23.295109+00:00"
+    },
+    {
+      "duration_seconds": 1.129,
+      "expected": "allow",
+      "name": "writer-abort-upload-initiate",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "D804E417E8C7EE3E",
+      "status": 200,
+      "time_utc": "2026-11-26T17:32:24.428539+00:00"
+    },
+    {
+      "duration_seconds": 0.496,
+      "expected": "allow",
+      "name": "writer-multipart-abort-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "A7D66E71DFCB1D6F",
+      "status": 204,
+      "time_utc": "2026-11-26T17:32:24.927803+00:00"
+    },
+    {
+      "duration_seconds": 0.09,
+      "expected": "allow",
+      "name": "writer-delete-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "8DC71118B6F5AB6D",
+      "status": 204,
+      "time_utc": "2026-11-26T17:32:25.022452+00:00"
+    },
+    {
+      "code": "SignatureDoesNotMatch",
+      "duration_seconds": 0.015,
+      "expected": "deny",
+      "name": "invalid-gateway-signature-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "F601C6401666D245",
+      "status": 403,
+      "time_utc": "2026-11-26T17:32:25.055431+00:00"
+    },
+    {
+      "code": "InvalidAccessKeyId",
+      "duration_seconds": 0.007,
+      "expected": "deny",
+      "name": "unknown-gateway-key-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "5CB4B819DD29EFD1",
+      "status": 403,
+      "time_utc": "2026-11-26T17:32:25.071371+00:00"
+    },
+    {
+      "code": "InvalidAccessKeyId",
+      "duration_seconds": 0.004,
+      "expected": "deny",
+      "name": "gateway-key-revocation-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "7826DC053C00358D",
+      "status": 403,
+      "time_utc": "2026-11-26T17:32:25.079175+00:00"
+    },
+    {
+      "code": "SignatureDoesNotMatch",
+      "duration_seconds": 0.005,
+      "expected": "deny",
+      "name": "old-gateway-secret-denied",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "83B2FCC8C50FB184",
+      "status": 403,
+      "time_utc": "2026-11-26T17:32:25.096220+00:00"
+    },
+    {
+      "duration_seconds": 0.915,
+      "expected": "allow",
+      "name": "rotated-gateway-secret-allowed",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "38021365EA5E56BC",
+      "status": 200,
+      "time_utc": "2026-11-26T17:32:26.016697+00:00"
+    },
+    {
+      "code": "AccessDenied",
+      "duration_seconds": 0.081,
+      "expected": "deny",
+      "name": "revoked-native-key-denied-through-gateway",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "3DEF0283A16CAF39",
+      "status": 403,
+      "time_utc": "2026-11-26T17:41:50.615025+00:00"
+    },
+    {
+      "code": null,
+      "duration_seconds": 0.993,
+      "expected": "deny",
+      "name": "revoked-native-key-denied-direct",
+      "observed": "denied",
+      "outcome": "PASS",
+      "request_id": "fra-1:u_-rCscHa6DqBP-0UEDu7DAdZyeP6-N9lW-wPq8j8GaM52NdwnR_g5_U3-8wvuXP",
+      "status": 401,
+      "time_utc": "2026-11-26T17:41:51.675889+00:00"
+    },
+    {
+      "duration_seconds": 1.782,
+      "expected": "allow",
+      "name": "rotated-native-key-allowed-after-restart",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "818423FE43D6288B",
+      "status": 200,
+      "time_utc": "2026-11-26T17:41:54.753922+00:00"
+    },
+    {
+      "duration_seconds": 0.591,
+      "expected": "allow",
+      "name": "rotated-native-key-integrity",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "E5C32327F6ABFE47",
+      "status": 200,
+      "time_utc": "2026-11-26T17:41:55.349510+00:00"
+    }
+  ],
+  "cleanup": {
+    "api-key-reader": "deleted/request accepted",
+    "api-key-writer": "deleted/request accepted",
+    "bucket-protected": "deleted/request accepted",
+    "bucket-shared": "deleted/request accepted",
+    "compartment": "deleted/request accepted",
+    "compartment_state": "DELETING",
+    "errors": [],
+    "finished_utc": "2026-11-26T17:46:56.333234+00:00",
+    "group-reader": "deleted/request accepted",
+    "group-writer": "deleted/request accepted",
+    "independent_verification": {
+      "bucket-protected": "ABSENT",
+      "bucket-shared": "ABSENT",
+      "compartment_state": "DELETING",
+      "group-reader": "ABSENT",
+      "group-writer": "ABSENT",
+      "policy": "ABSENT",
+      "user-reader": "ABSENT",
+      "user-writer": "ABSENT"
+    },
+    "independent_verification_utc": "2026-11-26T17:47:44.260391+00:00",
+    "local_generated_credentials": "removed",
+    "membership-reader": "deleted/request accepted",
+    "membership-writer": "deleted/request accepted",
+    "object-protected": "deleted/request accepted",
+    "object-shared": "deleted/request accepted",
+    "policy": "deleted/request accepted",
+    "user-reader": "deleted/request accepted",
+    "user-writer": "deleted/request accepted"
+  },
+  "events": [
+    {
+      "phase": "isolated-compartment-created",
+      "time_utc": "2026-11-26T17:03:57.336343+00:00"
+    },
+    {
+      "code": "IdcsConversionError",
+      "phase": "run-failed",
+      "request_id": "7D550619A7AB410DB52938745C4CB501/1ECF63404A9C7FE97D66086B4D545A25/80E26CFEB0653C8093527815CD61AC6A",
+      "status": 400,
+      "time_utc": "2026-11-26T17:03:57.617636+00:00"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:04:52.880327+00:00",
+      "user_alias": "reader"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:04:55.158062+00:00",
+      "user_alias": "writer"
+    },
+    {
+      "code": "BucketNotFound",
+      "phase": "run-failed",
+      "request_id": "fra-1:3dRT65vnAAqVvSof7iqdLKMrJum-zDvhPKs8aXTwFsCkgHx0MXlnhdcfeMi2tsrY",
+      "status": 404,
+      "time_utc": "2026-11-26T17:04:56.836370+00:00"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:06:54.190896+00:00",
+      "user_alias": "reader"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:06:54.196109+00:00",
+      "user_alias": "writer"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:12:51.789301+00:00",
+      "user_alias": "reader"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:12:51.793295+00:00",
+      "user_alias": "writer"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "writer-fixture-seed-shared",
+      "propagation_seconds": 0.976,
+      "time_utc": "2026-11-26T17:12:53.778372+00:00"
+    },
+    {
+      "phase": "temporary-protected-seed-grant-withdrawn",
+      "time_utc": "2026-11-26T17:14:01.960254+00:00"
+    },
+    {
+      "exception": "RequestException",
+      "phase": "run-failed",
+      "time_utc": "2026-11-26T17:14:02.033667+00:00"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:14:53.840626+00:00",
+      "user_alias": "reader"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:14:53.897804+00:00",
+      "user_alias": "writer"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "writer-fixture-seed-shared",
+      "propagation_seconds": 1.09,
+      "time_utc": "2026-11-26T17:14:56.033739+00:00"
+    },
+    {
+      "phase": "temporary-protected-seed-grant-withdrawn",
+      "time_utc": "2026-11-26T17:19:09.682377+00:00"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:19:16.498241+00:00",
+      "user_alias": "reader"
+    },
+    {
+      "phase": "test-user-ready",
+      "time_utc": "2026-11-26T17:19:16.500049+00:00",
+      "user_alias": "writer"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "writer-fixture-seed-shared",
+      "propagation_seconds": 1.517,
+      "time_utc": "2026-11-26T17:19:18.596912+00:00"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "writer-fixture-seed-protected",
+      "propagation_seconds": 1.161,
+      "time_utc": "2026-11-26T17:19:19.773498+00:00"
+    },
+    {
+      "phase": "temporary-protected-seed-grant-withdrawn",
+      "time_utc": "2026-11-26T17:19:21.747285+00:00"
+    },
+    {
+      "attempts": 48,
+      "code": null,
+      "observed": "denied",
+      "phase": "protected-policy-withdrawal-propagated",
+      "propagation_seconds": 245.217,
+      "request_id": "fra-1:PfqTI5z81x4rvO8a8F9uUOa1WP2mG2zfguRVv-GU9Cr-mESRXTU4r1brishk3lPW",
+      "status": 404,
+      "time_utc": "2026-11-26T17:23:27.029057+00:00"
+    },
+    {
+      "buckets": 2,
+      "groups": 2,
+      "phase": "provisioned",
+      "policy_scope": "isolated child compartment; shared bucket objects only",
+      "time_utc": "2026-11-26T17:23:27.091385+00:00",
+      "users": 2
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "reader-native-iam-propagated",
+      "propagation_seconds": 1.044,
+      "time_utc": "2026-11-26T17:24:22.933518+00:00"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "writer-native-iam-propagated",
+      "propagation_seconds": 1.223,
+      "time_utc": "2026-11-26T17:24:24.177344+00:00"
+    },
+    {
+      "last_error": {
+        "code": null,
+        "request_id": "fra-1:IWkdT7lCkvlgwohfIYErYfduwrow3BXmguoOOhx_-8CD-1HilhNfDz_3pVovL_Oa",
+        "status": 401
+      },
+      "observed": "timeout",
+      "phase": "replacement-native-key-propagated",
+      "time_utc": "2026-11-26T17:29:56.322173+00:00"
+    },
+    {
+      "exception": "TimeoutError",
+      "phase": "run-failed",
+      "time_utc": "2026-11-26T17:29:56.367079+00:00"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "reader-native-iam-propagated",
+      "propagation_seconds": 0.809,
+      "time_utc": "2026-11-26T17:31:40.399093+00:00"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "writer-native-iam-propagated",
+      "propagation_seconds": 1.563,
+      "time_utc": "2026-11-26T17:31:41.968637+00:00"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "replacement-native-key-propagated",
+      "propagation_seconds": 1.43,
+      "time_utc": "2026-11-26T17:32:27.489113+00:00"
+    },
+    {
+      "phase": "native-api-key-revocation-requested",
+      "request_id": "5BBF2FA31C734FB0ACAD795B53E9A6D3/A9FB26F8F681E4B32C6D086B4D545AFD/E3CF432468B3362C473639E071E36B0D",
+      "status": 204,
+      "time_utc": "2026-11-26T17:32:28.539149+00:00",
+      "user_alias": "writer"
+    },
+    {
+      "attempts": 108,
+      "code": "403",
+      "observed": "denied",
+      "phase": "native-key-revocation-propagated",
+      "propagation_seconds": 561.929,
+      "request_id": "A660A89294B79760",
+      "status": 403,
+      "time_utc": "2026-11-26T17:41:50.500401+00:00"
+    },
+    {
+      "cases": 35,
+      "phase": "verification-complete",
+      "time_utc": "2026-11-26T17:41:55.384829+00:00"
+    },
+    {
+      "attempts": 53,
+      "observed": "allowed",
+      "phase": "cleanup-access-protected",
+      "propagation_seconds": 272.028,
+      "time_utc": "2026-11-26T17:46:36.878169+00:00"
+    },
+    {
+      "attempts": 1,
+      "observed": "allowed",
+      "phase": "cleanup-access-shared",
+      "propagation_seconds": 0.39,
+      "time_utc": "2026-11-26T17:46:40.991321+00:00"
+    },
+    {
+      "errors": 0,
+      "phase": "cleanup-finished",
+      "time_utc": "2026-11-26T17:46:56.335339+00:00"
+    }
+  ],
+  "fixture_checks": [
+    {
+      "duration_seconds": 1.017,
+      "expected": "allow",
+      "name": "fixture-protected-object-exists-before-withdrawal",
+      "observed": "allowed",
+      "outcome": "PASS",
+      "request_id": "fra-1:MQIwTeNYAKErbT3tMS3-4K_fXFFalrwkjn5-yAO6nkFQG4fszKkOk1NXpGH15s20",
+      "status": 200,
+      "time_utc": "2026-11-26T17:19:20.801703+00:00"
+    }
+  ],
+  "native_principals": {
+    "distinct_api_keys": true,
+    "distinct_users": true,
+    "permissions": {
+      "reader": "read buckets and read shared-bucket objects",
+      "writer": "read buckets and manage shared-bucket objects"
+    }
+  },
+  "payload_integrity": {
+    "algorithm": "SHA-256",
+    "bytes": 2800,
+    "sha256": "d3cba165655de31ceb413ae2e3233c9248de27e725640419e292a790e6a3cef8"
+  },
+  "previous_attempts": [
+    {
+      "cases": [
+        {
+          "duration_seconds": 2.033,
+          "expected": "allow",
+          "name": "reader-get-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "2439E466E03766A3",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:27.735907+00:00"
+        },
+        {
+          "duration_seconds": 0.58,
+          "expected": "allow",
+          "name": "reader-head-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "57BD739942531F57",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:28.318374+00:00"
+        },
+        {
+          "duration_seconds": 0.604,
+          "expected": "allow",
+          "name": "reader-list-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "36D9A2A241824FFC",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:28.929752+00:00"
+        },
+        {
+          "code": "NoSuchKey",
+          "duration_seconds": 1.03,
+          "expected": "deny",
+          "name": "reader-put-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "EC9C248B773A5DAF",
+          "status": 404,
+          "time_utc": "2026-11-26T17:24:29.966715+00:00"
+        },
+        {
+          "code": "NoSuchKey",
+          "duration_seconds": 0.961,
+          "expected": "deny",
+          "name": "reader-delete-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "3279B0CA7BA7F386",
+          "status": 404,
+          "time_utc": "2026-11-26T17:24:30.930115+00:00"
+        },
+        {
+          "duration_seconds": 0.167,
+          "expected": "allow",
+          "name": "seed-intact-after-reader-delete-denial",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "ADD564B0E5BBC51A",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:31.098620+00:00"
+        },
+        {
+          "code": "NoSuchKey",
+          "duration_seconds": 0.882,
+          "expected": "deny",
+          "name": "reader-protected-get-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "D1795567D5203A7A",
+          "status": 404,
+          "time_utc": "2026-11-26T17:24:31.982562+00:00"
+        },
+        {
+          "code": "NoSuchKey",
+          "duration_seconds": 1.043,
+          "expected": "deny",
+          "name": "writer-protected-get-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "CB543C519DB530AA",
+          "status": 404,
+          "time_utc": "2026-11-26T17:24:33.028257+00:00"
+        },
+        {
+          "code": "NoSuchKey",
+          "duration_seconds": 0.576,
+          "expected": "deny",
+          "name": "reader-multipart-initiate-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "DBB860F7383276CA",
+          "status": 404,
+          "time_utc": "2026-11-26T17:24:33.618131+00:00"
+        },
+        {
+          "duration_seconds": 1.386,
+          "expected": "allow",
+          "name": "writer-put-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "CB8000F562459DE5",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:35.013246+00:00"
+        },
+        {
+          "duration_seconds": 0.247,
+          "expected": "allow",
+          "name": "writer-get-integrity",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "9F9B931E7A095A8A",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:35.266096+00:00"
+        },
+        {
+          "duration_seconds": 0.959,
+          "expected": "allow",
+          "name": "reader-range-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "8E1F44CF90B352D7",
+          "status": 206,
+          "time_utc": "2026-11-26T17:24:36.227579+00:00"
+        },
+        {
+          "duration_seconds": 1.518,
+          "expected": "allow",
+          "name": "writer-conditional-put-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "31FF19B7669D6777",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:37.746954+00:00"
+        },
+        {
+          "code": "PreconditionFailed",
+          "expected_status": 412,
+          "name": "writer-conditional-conflict",
+          "outcome": "PASS",
+          "request_id": "8BDF4AC23E648704",
+          "status": 412,
+          "time_utc": "2026-11-26T17:24:38.420787+00:00"
+        },
+        {
+          "duration_seconds": 2.471,
+          "expected": "allow",
+          "name": "writer-copy-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "638B6B8798201672",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:40.895030+00:00"
+        },
+        {
+          "duration_seconds": 0.521,
+          "expected": "allow",
+          "name": "writer-copy-integrity",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "85758900385F8905",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:41.419388+00:00"
+        },
+        {
+          "duration_seconds": 1.043,
+          "expected": "allow",
+          "name": "writer-multipart-initiate-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "F7E4CFC4F0CC153C",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:42.465460+00:00"
+        },
+        {
+          "code": "NoSuchUpload",
+          "duration_seconds": 0.616,
+          "expected": "deny",
+          "name": "reader-multipart-abort-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "6924422E96B2E526",
+          "status": 404,
+          "time_utc": "2026-11-26T17:24:43.091217+00:00"
+        },
+        {
+          "duration_seconds": 3.047,
+          "expected": "allow",
+          "name": "writer-multipart-part1-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "69A0B19164EFBDCE",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:46.141551+00:00"
+        },
+        {
+          "duration_seconds": 0.512,
+          "expected": "allow",
+          "name": "writer-multipart-part2-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "2BBAB3DD5292DB72",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:46.657950+00:00"
+        },
+        {
+          "duration_seconds": 0.105,
+          "expected": "allow",
+          "name": "writer-multipart-list-parts-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "9A330BFA41CF93EF",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:46.764633+00:00"
+        },
+        {
+          "duration_seconds": 0.949,
+          "expected": "allow",
+          "name": "writer-multipart-complete-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "A3173973637D58DD",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:47.716862+00:00"
+        },
+        {
+          "duration_seconds": 2.695,
+          "expected": "allow",
+          "name": "multipart-roundtrip-integrity",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "2E0A5177ACE5C520",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:50.425064+00:00"
+        },
+        {
+          "duration_seconds": 1.025,
+          "expected": "allow",
+          "name": "writer-abort-upload-initiate",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "9D6F00C7E92BDA29",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:51.459417+00:00"
+        },
+        {
+          "duration_seconds": 0.436,
+          "expected": "allow",
+          "name": "writer-multipart-abort-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "DE8B20F58C4C8A60",
+          "status": 204,
+          "time_utc": "2026-11-26T17:24:51.901990+00:00"
+        },
+        {
+          "duration_seconds": 0.133,
+          "expected": "allow",
+          "name": "writer-delete-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "83764AAD886698D6",
+          "status": 204,
+          "time_utc": "2026-11-26T17:24:52.040511+00:00"
+        },
+        {
+          "code": "SignatureDoesNotMatch",
+          "duration_seconds": 0.02,
+          "expected": "deny",
+          "name": "invalid-gateway-signature-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "EC953DBAF5B51797",
+          "status": 403,
+          "time_utc": "2026-11-26T17:24:52.095108+00:00"
+        },
+        {
+          "code": "InvalidAccessKeyId",
+          "duration_seconds": 0.011,
+          "expected": "deny",
+          "name": "unknown-gateway-key-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "F6E77D3D05A25A6D",
+          "status": 403,
+          "time_utc": "2026-11-26T17:24:52.131856+00:00"
+        },
+        {
+          "code": "InvalidAccessKeyId",
+          "duration_seconds": 0.017,
+          "expected": "deny",
+          "name": "gateway-key-revocation-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "C1C67AE992F1B808",
+          "status": 403,
+          "time_utc": "2026-11-26T17:24:52.181921+00:00"
+        },
+        {
+          "code": "SignatureDoesNotMatch",
+          "duration_seconds": 0.007,
+          "expected": "deny",
+          "name": "old-gateway-secret-denied",
+          "observed": "denied",
+          "outcome": "PASS",
+          "request_id": "2CCCE39F99008E1A",
+          "status": 403,
+          "time_utc": "2026-11-26T17:24:52.213551+00:00"
+        },
+        {
+          "duration_seconds": 0.734,
+          "expected": "allow",
+          "name": "rotated-gateway-secret-allowed",
+          "observed": "allowed",
+          "outcome": "PASS",
+          "request_id": "3FE7E365BE2C2578",
+          "status": 200,
+          "time_utc": "2026-11-26T17:24:52.958826+00:00"
+        }
+      ],
+      "finished_utc": "2026-11-26T17:29:56.364334+00:00",
+      "started_utc": "2026-11-26T17:24:21.816968+00:00",
+      "verdict": "FAIL"
+    }
+  ],
+  "region": "eu-frankfurt-1",
+  "run_id": "s3px-20261126170356-ab08",
+  "run_status": "CLEANED",
+  "source_commit": "875243f0119552eea04bd26abc5a4fd0f5bea2cc",
+  "started_utc": "2026-11-26T17:03:56.419457+00:00",
+  "target": "real OCI Object Storage native API",
+  "verdict": "PASS",
+  "verification_finished_utc": "2026-11-26T17:41:55.375801+00:00",
+  "verification_started_utc": "2026-11-26T17:31:39.512466+00:00"
+}

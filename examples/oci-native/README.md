@@ -143,7 +143,11 @@ s3 = boto3.Session(profile_name="pca-s3").client(
     "s3",
     endpoint_url="https://s3.pca.example",
     region_name="us-east-1",
-    config=Config(s3={"addressing_style": "path"}),
+    config=Config(
+        s3={"addressing_style": "path"},
+        request_checksum_calculation="when_required",
+        response_checksum_validation="when_required",
+    ),
     # For a private CA: verify="/path/to/gateway-ca.pem"
 )
 s3.upload_file("sample.bin", "approved-bucket", "sample.bin")
@@ -218,3 +222,19 @@ native IAM policies, cross-bucket denial, invalid signatures, native user/API
 key and policy revocation, gateway disable/rotation and cross-user multipart
 permissions. Native authorization tests use a synthetic service which verifies
 the actual per-user RSA signatures; they are not live PCA IAM certification.
+
+## Real OCI acceptance before PCA deployment
+
+Use the [live acceptance workflow](live/README.md) and its dated
+[validation report](live/validation-2026-11-26.md) / [sanitized evidence](live/evidence-2026-11-26.json).
+It provisions two real OCI users with different native IAM permissions and
+tests allowed/denied data operations, gateway key lifecycle and native signing
+key revocation/rotation. The report states the exact artifact and client profile,
+propagation observations, cleanup outcome and remaining PCA qualification gates.
+
+For urgent cutoff **at this gateway**, disable the mapped gateway keys first.
+Native IAM/key changes can take time to propagate; disabling a gateway key does
+not revoke a caller's separate direct native API credentials. Native signing-key
+rotation requires the replacement to authenticate successfully before the old
+key is revoked, then an updated profile and gateway restart. The live test
+verifies this recovery sequence.
