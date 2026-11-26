@@ -238,7 +238,7 @@ References: [OKE internal LB annotations](https://docs.oracle.com/en-us/iaas/Con
 The first candidate's connected Temurin-base build was interrupted because
 registry access became unavailable. The delivered image uses
 `container/Dockerfile.offline`: cached official Python Debian/glibc Linux/amd64
-base `python@sha256:f0b72408d0c2ee5cf1df64adce9b92ab4f2d3c8cfbb879ac5ab1d0ec07208555`
+base `python@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b`
 plus the same publisher-verified Temurin17.0.21.1 JRE as the offline VM package.
 The Python runtime is retained in this base; gateway requests use Java only.
 There is no borrowed application image or site environment in this base.
