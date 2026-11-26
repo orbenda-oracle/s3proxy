@@ -250,3 +250,13 @@ The site supplies Python/OS prerequisites, native credentials, certificates
 and actual PCA qualification; preparation does not deploy the appliance.
 
 [Offline r1 preparation record and transfer digest](offline/preparation-20261126-r1.json).
+
+
+## Docker image and OKE Helm chart
+
+The [OKE handoff](../../deploy/oke/README.md) provides the actual Linux/amd64
+image export, pinned build recipes and dependency-free Helm chart. It mounts
+external per-user/native/TLS Secrets, defaults to ClusterIP, and offers an
+explicit internal OKE TCP load balancer. [Preparation evidence](../../deploy/oke/preparation-20261126-r1.json)
+records Linux container/TLS/secret-file checks, Docker load receipt, chart tests
+and remaining OKE/PCA acceptance. No image registry push or deployment is implied.
