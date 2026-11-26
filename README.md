@@ -85,6 +85,10 @@ Maven Central hosts S3Proxy artifacts and the wiki has
 
 ## Supported storage backends
 
+This fork adds [OCI/PCA native Object Storage](examples/oci-native/README.md)
+(`oci-native`, alias `pca-native`), using the native API behind the S3 frontend.
+
+
 * aws-s3
 * azureblob
 * filesystem (on-disk storage)

@@ -30,6 +30,7 @@ import org.gaul.s3proxy.blobstore.Credentials;
 import org.gaul.s3proxy.gcloudsdk.GCloudBlobStore;
 import org.gaul.s3proxy.nio2blob.FilesystemNio2BlobStore;
 import org.gaul.s3proxy.nio2blob.TransientNio2BlobStore;
+import org.gaul.s3proxy.oci.OciNativeBlobStore;
 import org.gaul.s3proxy.openstackswift.OpenStackSwiftBlobStore;
 import org.gaul.s3proxy.sftp.SftpBlobStore;
 
@@ -124,6 +125,8 @@ public final class BlobStores {
             yield new OpenStackSwiftBlobStore(creds, endpoint, projectName,
                     projectDomainName, userDomainName, swiftRegion);
         }
+        case "oci-native", "pca-native" -> OciNativeBlobStore.create(
+                properties);
         case "sftp" -> {
             String baseDir = property(properties,
                     SftpBlobStore.PROPERTY_BASEDIR, "/s3proxy");
@@ -134,7 +137,7 @@ public final class BlobStores {
         default -> throw new IllegalArgumentException("Unknown provider: " +
                 provider + ". Supported providers: filesystem, transient," +
                 " aws-s3, azureblob, google-cloud-storage, openstack-swift," +
-                " sftp");
+                " sftp, oci-native, pca-native");
         };
     }
 
@@ -150,6 +153,7 @@ public final class BlobStores {
      */
     static String resolveProviderAlias(String provider) {
         return switch (provider) {
+        case "pca-native" -> "oci-native";
         case "transient-nio2" -> "transient";
         case "filesystem-nio2" -> "filesystem";
         case "aws-s3-sdk", "s3" -> "aws-s3";

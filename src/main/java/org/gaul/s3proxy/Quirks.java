@@ -22,6 +22,7 @@ public final class Quirks {
     /** Blobstores which do not support blob-level access control. */
     public static final Set<String> NO_BLOB_ACCESS_CONTROL = Set.of(
             "azureblob",
+            "oci-native",
             "openstack-swift"
     );
 
@@ -113,7 +114,8 @@ public final class Quirks {
     public static final Set<String> NATIVE_CONDITIONAL_COPY = Set.of(
             "aws-s3",
             "azureblob",
-            "google-cloud-storage"
+            "google-cloud-storage",
+            "oci-native"
     );
 
     /**
@@ -128,6 +130,7 @@ public final class Quirks {
             "azureblob",
             "filesystem",
             "google-cloud-storage",
+            "oci-native",
             "transient"
     );
 
@@ -141,7 +144,8 @@ public final class Quirks {
      */
     public static final Set<String> NATIVE_CONDITIONAL_DELETE = Set.of(
             "aws-s3",
-            "azureblob"
+            "azureblob",
+            "oci-native"
     );
 
     /**
@@ -160,7 +164,8 @@ public final class Quirks {
     /** Blobstores with opaque ETags. */
     public static final Set<String> OPAQUE_ETAG = Set.of(
             "azureblob",
-            "google-cloud-storage"
+            "google-cloud-storage",
+            "oci-native"
     );
 
     /**
@@ -170,6 +175,7 @@ public final class Quirks {
      */
     public static final Set<String> NO_PUBLIC_WRITE_ACCESS = Set.of(
             "azureblob",
+            "oci-native",
             "openstack-swift"
     );
 

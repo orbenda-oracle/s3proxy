@@ -715,6 +715,9 @@ public class S3ProxyHandler {
         if (name.contains(".openstackswift.")) {
             return "openstack-swift";
         }
+        if (name.contains(".oci.")) {
+            return "oci-native";
+        }
         if (name.contains(".sftp.")) {
             return "sftp";
         }
@@ -6141,6 +6144,7 @@ public class S3ProxyHandler {
 
         // Providers that support native conditional writes
         boolean supportsNativeConditionalWrites =
+                blobStoreType.equals("oci-native") ||
                 blobStoreType.equals("azureblob") ||
                 blobStoreType.equals("aws-s3") ||
                 blobStoreType.equals("google-cloud-storage") ||

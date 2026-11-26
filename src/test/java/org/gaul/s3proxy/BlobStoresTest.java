@@ -67,6 +67,32 @@ public final class BlobStoresTest {
                 .hasMessageContaining("no-such-provider");
     }
 
+    @Test
+    public void testNativePcaRequiresExplicitEndpoint() {
+        assertThatThrownBy(() -> BlobStores.create("oci-native",
+                        new Properties()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("jclouds.endpoint");
+    }
+
+    @Test
+    public void testNativePcaRejectsInsecureEndpoint() {
+        var properties = new Properties();
+        properties.setProperty("jclouds.endpoint", "http://pca.example/oci");
+        assertThatThrownBy(() -> BlobStores.create("oci-native", properties))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("HTTPS");
+    }
+
+    @Test
+    public void testNativePcaRequiresNamespace() {
+        var properties = new Properties();
+        properties.setProperty("jclouds.endpoint", "https://pca.example/oci");
+        assertThatThrownBy(() -> BlobStores.create("oci-native", properties))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("s3proxy.oci.namespace");
+    }
+
     /** create resolves the name itself, for callers that do not. */
     @Test
     public void testCreateResolvesTheAlias() {

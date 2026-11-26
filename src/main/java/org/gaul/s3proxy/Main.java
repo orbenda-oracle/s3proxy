@@ -318,7 +318,8 @@ public final class Main {
         properties.setProperty(Constants.PROPERTY_PROVIDER, provider);
 
         if (provider.equals("filesystem") ||
-                provider.equals("transient")) {
+                provider.equals("transient") ||
+                provider.equals("oci-native")) {
             identity = Strings.nullToEmpty(identity);
             credential = Strings.nullToEmpty(credential);
         } else if (provider.equals("google-cloud-storage")) {
