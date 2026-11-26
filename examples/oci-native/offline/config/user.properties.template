@@ -1,0 +1,17 @@
+# Copy once per gateway access key. All listener/TLS values must match.
+# HTTPS only: do not add s3proxy.endpoint (that enables HTTP).
+s3proxy.secure-endpoint=https://0.0.0.0:8443
+s3proxy.allowed-hosts=REPLACE_GATEWAY_FQDN
+s3proxy.keystore-path=/etc/pca-s3proxy/tls/frontend.p12
+s3proxy.keystore-password=REPLACE_KEYSTORE_PASSWORD
+s3proxy.authorization=aws-v4
+s3proxy.identity=REPLACE_GATEWAY_ACCESS_KEY
+s3proxy.credential=REPLACE_GATEWAY_SECRET
+s3proxy.oci.enabled=true
+jclouds.provider=pca-native
+jclouds.endpoint=https://objectstorage.REPLACE_PCA_FQDN/oci
+s3proxy.oci.user-id=REPLACE_NATIVE_USER_OCID
+s3proxy.oci.namespace=REPLACE_NAMESPACE
+s3proxy.oci.compartment=REPLACE_COMPARTMENT_OCID
+s3proxy.oci.config-file=/etc/pca-s3proxy/native/config
+s3proxy.oci.profile=REPLACE_PROFILE

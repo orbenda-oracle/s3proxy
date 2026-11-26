@@ -1,0 +1,24 @@
+[Unit]
+Description=PCA native Object Storage S3 gateway
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=pca-s3proxy
+Group=pca-s3proxy
+ExecStart=/opt/pca-s3proxy/current/bin/launch.sh
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=90
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+RestrictSUIDSGID=true
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

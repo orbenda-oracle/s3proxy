@@ -1,0 +1,9 @@
+# REVIEW against the INSTALLED PCA release. Substitute local group/compartment names.
+# Do not apply to tenancy root or use production buckets for qualification.
+# Place policy in the qualification compartment or approved ancestor.
+Allow group PCA-S3-Readers to read buckets in compartment S3-Qualification
+Allow group PCA-S3-Readers to read objects in compartment S3-Qualification where target.bucket.name = 's3-qualification-shared'
+Allow group PCA-S3-Writers to read buckets in compartment S3-Qualification
+Allow group PCA-S3-Writers to manage objects in compartment S3-Qualification where target.bucket.name = 's3-qualification-shared'
+# No protected-object grant. Deny follows absence of an allow across ALL applicable policies.
+# Existing inherited grants must also be examined. Bucket creation/deletion is admin-only here.

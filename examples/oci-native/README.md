@@ -238,3 +238,13 @@ not revoke a caller's separate direct native API credentials. Native signing-key
 rotation requires the replacement to authenticate successfully before the old
 key is revoked, then an updated profile and gateway restart. The live test
 verifies this recovery sequence.
+
+## Offline PCA deployment package
+
+The [offline handoff](offline/README.md) provides a Linux x86-64 package builder,
+per-user/TLS/systemd templates, protected gateway-key tooling, an onsite S3
+validator and runbooks for installation, IAM, native/gateway key lifecycle,
+acceptance and revocation-aware rollback. It bundles the tested JAR, pinned
+Linux Java runtime, offline Python wheels and original dependency notices.
+The site supplies Python/OS prerequisites, native credentials, certificates
+and actual PCA qualification; preparation does not deploy the appliance.

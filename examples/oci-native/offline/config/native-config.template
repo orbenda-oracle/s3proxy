@@ -1,0 +1,14 @@
+# Private key path must be absolute. Configure a distinct native user/key per profile.
+[READER]
+user=REPLACE_READER_USER_OCID
+tenancy=REPLACE_TENANCY_OCID
+fingerprint=REPLACE_READER_PUBLIC_KEY_FINGERPRINT
+key_file=/etc/pca-s3proxy/native/reader.pem
+region=REPLACE_PCA_REGION
+
+[WRITER]
+user=REPLACE_WRITER_USER_OCID
+tenancy=REPLACE_TENANCY_OCID
+fingerprint=REPLACE_WRITER_PUBLIC_KEY_FINGERPRINT
+key_file=/etc/pca-s3proxy/native/writer.pem
+region=REPLACE_PCA_REGION
