@@ -1,0 +1,7 @@
+Gateway: {{ include "pca-s3proxy.fullname" . }}
+Service type: {{ .Values.service.type }}; HTTPS Service port {{ .Values.service.port }} -> pod 8443.
+
+The chart references existing Secrets and does not manage their contents.
+Readiness/liveness are TCP listener checks; they do not prove native IAM/TLS.
+Run the signed reader/writer positive and negative acceptance before cutover.
+See deploy/oke/README.md for import, Secrets, TLS, rotation and rollback.

@@ -1,0 +1,19 @@
+image:
+  repository: REGISTRY/PROJECT/pca-s3proxy
+  tag: "20261126-oke-r1"
+  # Set the destination registry manifest digest after import; overrides tag.
+  digest: ""
+imagePullSecrets: []
+# Example for a precreated registry auth Secret:
+# imagePullSecrets:
+#   - name: private-registry
+secrets:
+  users: pca-s3proxy-users
+  native: pca-s3proxy-native
+  tls: pca-s3proxy-tls
+replicaCount: 1
+service:
+  type: ClusterIP
+  port: 443
+# To request an internal OKE classic load balancer, use type: LoadBalancer.
+# Confirm native OKE/PCA controller support, subnets, source rules and DNS first.

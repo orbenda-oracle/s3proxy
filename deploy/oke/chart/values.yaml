@@ -1,0 +1,39 @@
+replicaCount: 1
+image:
+  # Import the supplied image into your approved registry, then set repository.
+  repository: ""
+  tag: "20261126-oke-r1"
+  # Prefer the imported registry's immutable sha256 digest over the tag.
+  digest: ""
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+secrets:
+  # Existing Secrets in the release namespace; never put their contents here.
+  users: pca-s3proxy-users
+  native: pca-s3proxy-native
+  tls: pca-s3proxy-tls
+service:
+  type: ClusterIP
+  port: 443
+  annotations: {}
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+terminationGracePeriodSeconds: 90
+podAnnotations: {}
+nodeSelector:
+  kubernetes.io/os: linux
+  kubernetes.io/arch: amd64
+tolerations: []
+affinity: {}
+networkPolicy:
+  # Requires site-specific ingress/DNS/native-PCA egress rules and enforcing CNI.
+  enabled: false
+  ingress: []
+  egress: []

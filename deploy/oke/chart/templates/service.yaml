@@ -1,0 +1,31 @@
+{{- $annotations := deepCopy .Values.service.annotations -}}
+{{- if eq .Values.service.type "LoadBalancer" -}}
+{{- $internal := "service.beta.kubernetes.io/oci-load-balancer-internal" -}}
+{{- if and (hasKey $annotations $internal) (ne (toString (get $annotations $internal)) "true") -}}
+{{- fail "Only an internal OKE load balancer is supported" -}}
+{{- end -}}
+{{- if and (hasKey $annotations "oci.oraclecloud.com/load-balancer-type") (ne (get $annotations "oci.oraclecloud.com/load-balancer-type") "lb") -}}
+{{- fail "This chart's LoadBalancer option uses the OKE lb controller, not nlb" -}}
+{{- end -}}
+{{- $_ := set $annotations $internal "true" -}}
+{{- $_ := set $annotations "oci.oraclecloud.com/load-balancer-type" "lb" -}}
+{{- end }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pca-s3proxy.fullname" . }}
+  labels:
+    {{- include "pca-s3proxy.labels" . | nindent 4 }}
+  {{- with $annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: https
+      port: {{ .Values.service.port }}
+      targetPort: https
+      protocol: TCP
+  selector:
+    {{- include "pca-s3proxy.selector" . | nindent 4 }}
