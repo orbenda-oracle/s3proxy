@@ -248,3 +248,5 @@ acceptance and revocation-aware rollback. It bundles the tested JAR, pinned
 Linux Java runtime, offline Python wheels and original dependency notices.
 The site supplies Python/OS prerequisites, native credentials, certificates
 and actual PCA qualification; preparation does not deploy the appliance.
+
+[Offline r1 preparation record and transfer digest](offline/preparation-20261126-r1.json).
