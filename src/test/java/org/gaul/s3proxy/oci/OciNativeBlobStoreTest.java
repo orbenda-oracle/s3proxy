@@ -440,4 +440,18 @@ public final class OciNativeBlobStoreTest {
                         assertThat(error.statusCode()).isEqualTo(412));
     }
 
+    @Test
+    public void concealedAuthorization404CannotBecomeSuccessfulDelete() {
+        var store = new OciNativeBlobStore(client((method, arg) -> {
+            throw new BmcException(404, "NotAuthorizedOrNotFound", "concealed",
+                    "test", (Throwable) null);
+        }), "ns", "compartment");
+        assertThatThrownBy(() -> store.removeBlob(
+                software.amazon.awssdk.services.s3.model.DeleteObjectRequest
+                        .builder().bucket("bucket").key("key").build()))
+                .isInstanceOfSatisfying(software.amazon.awssdk.services.s3.model
+                        .S3Exception.class, error ->
+                        assertThat(error.statusCode()).isEqualTo(404));
+    }
+
 }

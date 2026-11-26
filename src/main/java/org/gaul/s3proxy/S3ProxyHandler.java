@@ -966,6 +966,9 @@ public class S3ProxyHandler {
             // unsigned request as for a signed one: a bucket assigned to a
             // store is served through that store's middlewares -- a
             // read-only one, say -- whoever is asking.
+            if (!blobStoreLocator.allowsAnonymousRequests()) {
+                throw new S3ProxyException(S3ErrorCode.ACCESS_DENIED);
+            }
             AccessGrant anonymousGrant =
                     blobStoreLocator.locateAnonymousBlobStore(
                             path.length > 1 ? path[1] : null,

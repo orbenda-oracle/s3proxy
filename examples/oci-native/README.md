@@ -33,32 +33,81 @@ key_file=/run/secrets/oci/api-key.pem
 region=REPLACE_WITH_SITE_REGION
 ```
 
-The OCI profile authenticates S3Proxy to native Object Storage. The separate
-`s3proxy.identity`/`s3proxy.credential` authenticate S3 clients to the gateway.
-You do not need `jclouds.identity` or `jclouds.credential`. Frontend S3 keys are
-not Oracle Customer Secret Keys, and cannot be sent directly to native APIs.
-Keep the populated properties, OCI profile and private key outside Git, mount
-secrets read-only and restrict their filesystem permissions.
+## Per-user authentication and native authorization
 
-Use a dedicated backend principal restricted by native IAM to the intended
-compartment/buckets. The principal needs bucket-read access: before publishing
-objects, copies or completed multipart uploads, the backend reads the native
-bucket and requires `NoPublicAccess`. Public native buckets are unsupported;
-this check adds a native metadata round trip and does not prevent a native
-administrator from subsequently changing the bucket policy. `s3proxy.oci.compartment` controls bucket listing and
-creation; IAM controls access to buckets addressed by name. Every frontend
-identity wired to this backend acts as that backend principal. This is not
-per-user native IAM delegation. Use separate principals/backends and S3Proxy's
-bucket/prefix routing if isolation is needed. Anonymous reads through this
-backend and ACL changes are refused; native bucket exposure must also be
-controlled through native IAM and bucket settings.
+Create **one protected properties file per gateway S3 access key**. Its
+`s3proxy.oci.user-id` must exactly match `user=` in its external OCI profile;
+a mismatch fails startup. Each file has its own `s3proxy.identity` and
+`s3proxy.credential`. These are gateway keys, not Oracle Customer Secret Keys.
+Native signing credentials cannot be derived from an S3 secret or a username.
+The gateway must be provisioned with the corresponding user's native API
+signing credential. A shared administrator profile does not impersonate users.
 
-Build and start (Java 17+):
+For every supported storage operation:
+
+1. The locator reads the key's current protected file and rejects unknown,
+   disabled, missing, malformed or remapped entries. There is no fallback user.
+2. S3Proxy verifies the SigV4 signature with that gateway key's current secret.
+   An invalid signature never reaches native Object Storage.
+3. The user's own backend signs the native request as that PCA user. PCA's
+   native IAM service evaluates that user's current native permissions for the
+   actual operation/resource. The gateway maintains no copy of IAM policies or
+   positive permission decisions.
+
+The gateway stores these per-user signing credentials server-side. Keep the
+populated properties, OCI profile and private key outside Git, use the approved
+secret storage mechanism, mount secrets read-only where supported and restrict
+filesystem access to the gateway operator. Select principals and native IAM
+permissions appropriate to the users/workloads. Do not use an administrator as
+a fallback when a user's native request is denied. Native user/key/policy
+revocation remains subject to native service behavior and propagation, to be
+qualified on the installed PCA release.
+
+Give writers bucket-read permission as well as their approved object mutation
+permissions: before publishing objects, copies or completed multipart uploads,
+the adapter checks that the native bucket has `NoPublicAccess`. This adds a
+native metadata round trip. Public native buckets are unsupported; native
+administrators remain responsible for subsequent policy changes.
+`s3proxy.oci.compartment` controls that user's bucket listing and creation;
+native IAM controls access to buckets addressed by name. A configured
+compartment alone never grants permission.
+
+Build and start (Java 17+), using files such as `alice.properties` and
+`bob.properties` copied from the template and bound to their respective profiles:
 
 ```sh
 mvn verify
-./target/s3proxy --properties /run/secrets/s3proxy.properties
+./target/s3proxy \
+  --properties /run/secrets/s3proxy/alice.properties \
+  --properties /run/secrets/s3proxy/bob.properties
 ```
+
+For example, bind `alice.properties` to the Alice user OCID and `[ALICE]`
+profile, and `bob.properties` to the Bob user OCID and `[BOB]` profile. Each user
+needs native API signing credentials supported by the appliance; console
+passwords, usernames and SAML sessions are not native delegation credentials.
+
+The listener/TLS settings must agree in every file. Native user mode requires
+`aws-v4`; anonymous access, mixed storage providers, bucket locators and
+middleware-wrapped backends are rejected. This prevents alternate routing from
+bypassing the native user binding. Use a separate process for other providers.
+All identity/backend settings must be present in the protected files; JVM
+property overrides must not be used to change these bindings.
+
+To generate gateway credentials during protected provisioning, use a secure
+random generator, for example Python's `secrets.token_hex(16)` for the access key
+and `secrets.token_urlsafe(32)` for the secret. Write them directly to the user's
+protected file and deliver the secret through the approved secret mechanism.
+This change does not implement a web enrollment or credential delivery service.
+
+To revoke a gateway key, atomically set `s3proxy.oci.enabled=false` in its file.
+Deleting/unreading the file also denies subsequent credential lookups. To
+rotate its secret, atomically replace `s3proxy.credential` in the same file;
+the old secret and sessions derived from it stop working on subsequent
+lookups. Requests already admitted can finish. New access key IDs, native user
+bindings, endpoint/profile changes and native signing-key replacement require a
+restart; an edited binding is denied until reloaded through startup validation.
+Keep disabled files available if they remain in the startup argument list.
 
 The sample listens on loopback HTTP for a local TLS reverse proxy. Expose a
 private HTTPS endpoint to S3 clients, preserve their signed Host, path and query,
@@ -112,6 +161,10 @@ S3Proxy per-object implementation. CopyObject streams via the gateway rather
 than using asynchronous native CopyObject. Multipart IDs come from the native
 service and do not require process-local upload state.
 
+A native `NotAuthorizedOrNotFound` response is not evidence of successful
+deletion. Concealed authorization failures remain errors; only an explicit
+native `ObjectNotFound` delete result is treated as idempotent success.
+
 Explicit limitations: version-specific access and S3 versioning configuration;
 public ACLs/ACL changes; requested SSE/KMS/SSE-C; tags; non-standard storage
 classes; object lock/retention; redirects/Expires on writes; date-based read
@@ -151,8 +204,17 @@ never export real credentials or customer object contents into this repository.
 - [PCA Object Storage](https://docs.oracle.com/en/engineered-systems/private-cloud-appliance/3.0-latest/user/user-usr-objectstore.html)
 - [OCI Java SDK](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/javasdk.htm)
 
-Recorded local validation on 2026-11-26: `mvn verify` succeeded with 1,499 tests,
+Recorded local validation on 2026-11-26 after the per-user changes:
+`mvn verify` succeeded with 1,514 tests across the JUnit providers (4 + 1,510),
 zero failures/errors and 32 skips; Checkstyle reported zero violations and
 Modernizer passed. The packaged dependency JAR also started on Java 17.0.11
 with a generated test-only OCI profile and returned 403 for an unsigned S3
 request, without contacting native Object Storage.
+
+Per-user authorization was added after the initial native adapter. Legacy
+native configurations must add the explicit user binding and use one file per
+gateway key. Qualification must additionally prove two users with different
+native IAM policies, cross-bucket denial, invalid signatures, native user/API
+key and policy revocation, gateway disable/rotation and cross-user multipart
+permissions. Native authorization tests use a synthetic service which verifies
+the actual per-user RSA signatures; they are not live PCA IAM certification.

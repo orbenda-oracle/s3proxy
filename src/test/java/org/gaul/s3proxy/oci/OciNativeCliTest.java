@@ -55,4 +55,38 @@ public final class OciNativeCliTest {
             process.destroyForcibly();
         }
     }
+    @Test
+    public void nativeSigningProfileMustMatchTheBoundUser() throws Exception {
+        Path key = directory.resolve("test-only-key.pem");
+        var pair = java.security.KeyPairGenerator.getInstance("RSA")
+                .generateKeyPair();
+        Files.writeString(key, "-----BEGIN PRIVATE KEY-----\n" +
+                java.util.Base64.getMimeEncoder(64, new byte[] {'\n'})
+                        .encodeToString(pair.getPrivate().getEncoded()) +
+                "\n-----END PRIVATE KEY-----\n");
+        Path config = directory.resolve("oci-config");
+        Files.writeString(config, """
+                [DEFAULT]
+                user=alice
+                tenancy=tenant
+                fingerprint=fingerprint
+                region=us-phoenix-1
+                key_file=%s
+                """.formatted(key));
+        var properties = new java.util.Properties();
+        properties.setProperty("jclouds.endpoint", "https://pca.example/oci");
+        properties.setProperty("s3proxy.oci.namespace", "ns");
+        properties.setProperty("s3proxy.oci.compartment", "compartment");
+        properties.setProperty("s3proxy.oci.config-file", config.toString());
+        properties.setProperty("s3proxy.oci.user-id", "administrator");
+        org.assertj.core.api.Assertions.assertThatThrownBy(() ->
+                OciNativeBlobStore.create(properties))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("does not match OCI profile user");
+        properties.setProperty("s3proxy.oci.user-id", "alice");
+        try (var backend = OciNativeBlobStore.create(properties)) {
+            assertThat(backend.nativeUserId()).isEqualTo("alice");
+        }
+    }
+
 }

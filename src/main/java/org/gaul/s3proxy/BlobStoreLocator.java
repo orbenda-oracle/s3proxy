@@ -22,6 +22,11 @@ public interface BlobStoreLocator {
     @Nullable AccessGrant locateBlobStore(@Nullable String identity,
             @Nullable String container, @Nullable String blob);
 
+    /** Whether unsigned requests may take the public-access path. */
+    default boolean allowsAnonymousRequests() {
+        return true;
+    }
+
     /**
      * Whether the answer depends on the container, so that an identity may
      * be refused one bucket of a blob store and granted another.  ListBuckets

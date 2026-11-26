@@ -87,9 +87,16 @@ public final class OciNativeBlobStore implements BlobStore {
     private final ObjectStorage client;
     private final String namespace;
     private final String compartment;
+    private final @Nullable String nativeUserId;
 
     public OciNativeBlobStore(ObjectStorage client, String namespace,
             String compartment) {
+        this(client, namespace, compartment, null);
+    }
+
+    private OciNativeBlobStore(ObjectStorage client, String namespace,
+            String compartment, @Nullable String nativeUserId) {
+        this.nativeUserId = nativeUserId;
         this.client = client;
         this.namespace = namespace;
         this.compartment = compartment;
@@ -107,21 +114,34 @@ public final class OciNativeBlobStore implements BlobStore {
         String namespace = required(properties, "s3proxy.oci.namespace");
         String compartment = required(properties, "s3proxy.oci.compartment");
         String config = required(properties, "s3proxy.oci.config-file");
+        String user = required(properties, "s3proxy.oci.user-id");
         String profile = properties.getProperty("s3proxy.oci.profile",
                 "DEFAULT");
         try {
             var auth = new ConfigFileAuthenticationDetailsProvider(config,
                     profile);
+            if (!user.equals(auth.getUserId())) {
+                throw new IllegalArgumentException(
+                        "s3proxy.oci.user-id does not match OCI profile user");
+            }
             // Never retry an already-consumed streaming request body.
             var client = ObjectStorageClient.builder().endpoint(endpoint)
                     .configuration(ClientConfiguration.builder()
                             .retryConfiguration(RetryConfiguration
                                     .NO_RETRY_CONFIGURATION).build())
                     .build(auth);
-            return new OciNativeBlobStore(client, namespace, compartment);
+            return new OciNativeBlobStore(client, namespace, compartment, user);
         } catch (IOException ioe) {
             throw new UncheckedIOException("Cannot read OCI config", ioe);
         }
+    }
+
+    public String nativeUserId() {
+        if (nativeUserId == null) {
+            throw new IllegalStateException(
+                    "Backend has no verified native user binding");
+        }
+        return nativeUserId;
     }
 
     private static String required(Properties properties, String name) {
@@ -404,7 +424,8 @@ public final class OciNativeBlobStore implements BlobStore {
                     .bucketName(request.bucket()).objectName(request.key())
                     .ifMatch(request.ifMatch()).build());
         } catch (BmcException error) {
-            if (error.getStatusCode() != 404) {
+            if (error.getStatusCode() != 404 ||
+                    !"ObjectNotFound".equals(error.getServiceCode())) {
                 throw translate(error, request.bucket(), request.key());
             }
         }
