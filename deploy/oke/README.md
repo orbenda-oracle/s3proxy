@@ -24,7 +24,7 @@ set -euo pipefail
 sha256sum -c SHA256SUMS
 gunzip -c s3proxy-image.tar.gz | docker load
 docker image inspect pca-s3proxy:20261126-oke-r1 --format '{{.Id}}'
-# Compare the image ID with image-metadata.json before tagging.
+# Compare against image-metadata.json before tagging (see digest note below).
 docker tag pca-s3proxy:20261126-oke-r1 REGISTRY/PROJECT/pca-s3proxy:20261126-oke-r1
 docker login REGISTRY
 docker push REGISTRY/PROJECT/pca-s3proxy:20261126-oke-r1
@@ -33,8 +33,11 @@ docker push REGISTRY/PROJECT/pca-s3proxy:20261126-oke-r1
 
 No registry push is performed while preparing this package. Use the approved
 registry's authentication/CA process; never disable TLS verification. A Docker
-archive checksum, Docker image ID/config digest and registry manifest digest
-are different identifiers. Pin **the destination registry manifest digest** in
+archive checksum, config digest and registry manifest digest are different
+identifiers. Docker versions report either the image config digest or an OCI
+manifest digest as the inspected image ID; metadata records both
+`image_config_digest` and `image_manifest_digest`. Match the imported image to
+the appropriate recorded value before tagging. Pin **the destination registry manifest digest** in
 Helm values after import. `image.digest` overrides `image.tag`. The offline tag
 is a local import name; it is not an already-published Docker Hub repository.
 OKE worker nodes must trust/reach the internal registry. Pre-stage Helm/kubectl
