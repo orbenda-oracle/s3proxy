@@ -208,7 +208,7 @@ checks before restoring traffic. Binary rollback cannot undo object mutations.
 
 ## Build from source
 
-The Dockerfile pins its official base digest and performs no package installs.
+The standard Dockerfile pins its official Temurin base digest and performs no package installs.
 `prepare_context.py` verifies the exact previously OCI-tested JAR and copies
 only that JAR, the launcher, Dockerfile and public input metadata into a NEW
 build directory. Do not build from a populated site secret workspace.
@@ -231,3 +231,23 @@ before registry import. Original dependency and base runtime notices are retaine
 References: [OKE internal LB annotations](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingloadbalancer_topic-Summaryofannotations.htm),
 [Kubernetes Secret projection](https://kubernetes.io/docs/concepts/configuration/secret/),
 [official Temurin image](https://hub.docker.com/_/eclipse-temurin).
+
+
+### Recorded offline-build fallback
+
+The first candidate's connected Temurin-base build was interrupted because
+registry access became unavailable. The delivered image uses
+`container/Dockerfile.offline`: cached official Python Debian/glibc Linux/amd64
+base `python@sha256:f0b72408d0c2ee5cf1df64adce9b92ab4f2d3c8cfbb879ac5ab1d0ec07208555`
+plus the same publisher-verified Temurin17.0.21.1 JRE as the offline VM package.
+The Python runtime is retained in this base; gateway requests use Java only.
+There is no borrowed application image or site environment in this base.
+Both recipes expose the same filesystem paths, UID/GID and entrypoint.
+
+For this exact recipe, use `prepare_context.py --offline-jre
+/INPUTS/OpenJDK17U-jre_x64_linux_hotspot_17.0.21.1_2.tar.gz --output /NEW/CONTEXT`.
+The helper checks the fixed publisher digest before extraction. The offline
+base must already be loaded; its layers are included in the delivered image
+archive. `image-metadata.json` records the actual recipe/base/JRE/source and
+checks. Rebuilding the standard recipe produces a different image/digest and
+requires its own runtime/acceptance checks.

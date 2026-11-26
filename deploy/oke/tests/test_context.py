@@ -25,4 +25,11 @@ class BuildContextTest(unittest.TestCase):
             report=json.loads((out/'build-inputs.json').read_text())
             self.assertEqual(report['jar_sha256'],'d6e2affbf8e9c6b27e5334640911c94fe077bfc4e3a7db8767dc2a6daeb36232')
 
+    def test_offline_context_rejects_an_unverified_runtime(self):
+        with tempfile.TemporaryDirectory() as d:
+            d=Path(d);(d/'wrong.tar.gz').write_bytes(b'not the verified runtime')
+            result=subprocess.run([sys.executable,str(ROOT/'prepare_context.py'),'--offline-jre',str(d/'wrong.tar.gz'),'--output',str(d/'context')],capture_output=True,text=True)
+            self.assertIn('JRE differs from the verified runtime',result.stderr)
+            self.assertFalse((d/'context').exists())
+
 if __name__=='__main__':unittest.main()

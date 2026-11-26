@@ -1,0 +1,21 @@
+# Offline recipe: previously cached official Python Debian/glibc amd64 image.
+# Python is retained but is not part of the gateway request path.
+FROM docker.io/library/python@sha256:f0b72408d0c2ee5cf1df64adce9b92ab4f2d3c8cfbb879ac5ab1d0ec07208555
+ARG SOURCE_REVISION
+LABEL org.opencontainers.image.title="PCA native Object Storage S3 gateway" \
+      org.opencontainers.image.source="https://github.com/orbenda-oracle/s3proxy" \
+      org.opencontainers.image.revision="${SOURCE_REVISION}" \
+      org.opencontainers.image.version="20261126-oke-r1" \
+      org.opencontainers.image.licenses="Apache-2.0"
+WORKDIR /opt/pca-s3proxy
+COPY runtime/jre /opt/java/openjdk
+COPY lib/s3proxy.jar /opt/pca-s3proxy/lib/s3proxy.jar
+COPY bin/launch.sh /opt/pca-s3proxy/bin/launch.sh
+ENV JAVA_HOME=/opt/java/openjdk \
+    PCA_S3PROXY_JAVA=/opt/java/openjdk/bin/java \
+    PCA_S3PROXY_CONFIG_DIR=/etc/pca-s3proxy \
+    HOME=/tmp
+USER 10001:10001
+EXPOSE 8443
+STOPSIGNAL SIGTERM
+ENTRYPOINT ["/opt/pca-s3proxy/bin/launch.sh"]
