@@ -10,9 +10,9 @@ Checks performed while preparing this package:
 - Linux x64 Temurin JRE download matched the pinned publisher SHA-256.
 - Offline-only installation of all seven pinned Python wheels into a new venv
   succeeded; `pip check` reported no broken requirements.
-- Six offline package safety tests passed, including fail-on-unexpected-grant,
+- Seven offline package safety tests passed, including fail-on-unexpected-grant,
   fail-on-transport-error, actual key-file rotation/disable/permissions, listing
-  effects, multipart part integrity and concealed-authorization rejection.
+  effects, multipart part integrity and concealed-authorization rejection, plus the Linux release filename.
 - Nine existing live-harness safety tests passed.
 - Actual launcher and packaged JAR started with built-in HTTPS, a generated
   test-only certificate and host Java 17. Trusted-CA HTTPS returned unsigned

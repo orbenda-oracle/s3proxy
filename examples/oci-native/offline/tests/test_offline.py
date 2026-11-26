@@ -61,6 +61,12 @@ class OfflineSafetyTest(unittest.TestCase):
             with self.assertRaises(AssertionError):r.check('denied','deny',lambda:{'ResponseMetadata':{'HTTPStatusCode':200}})
             self.assertEqual(json.loads((Path(d)/'report.json').read_text())['verdict'],'FAIL')
 
+class BuilderTest(unittest.TestCase):
+    def test_linux_x86_64_release_name_reaches_input_verification(self):
+        result=subprocess.run([sys.executable,str(ROOT/'build.py'),'--release','pca-s3proxy-test-linux-x86_64','--jre','/NONEXISTENT/jre','--jre-metadata','/NONEXISTENT/meta','--wheels','/NONEXISTENT/wheels','--dependency-jars','/NONEXISTENT/jars','--output','/NONEXISTENT/output'],capture_output=True,text=True)
+        self.assertNotIn('Release must be a simple filename',result.stderr)
+        self.assertNotEqual(result.returncode,0)
+
 class AcceptanceEffectsTest(unittest.TestCase):
     def setUp(self):
         spec=importlib.util.spec_from_file_location('onsite',ROOT/'bin/validate.py');self.m=importlib.util.module_from_spec(spec);spec.loader.exec_module(self.m)

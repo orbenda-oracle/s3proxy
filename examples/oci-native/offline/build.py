@@ -23,7 +23,7 @@ def main():
     for name in ('jre', 'jre-metadata', 'wheels', 'dependency-jars', 'output', 'release'):
         p.add_argument('--' + name, required=True)
     a = p.parse_args()
-    if not a.release.replace('-', '').replace('.', '').isalnum():
+    if not a.release.replace('-', '').replace('.', '').replace('_', '').isalnum():
         p.error('Release must be a simple filename')
     repo = Path(__file__).resolve().parents[3]
     jar = repo/'target/s3proxy-4.3.0-SNAPSHOT-jar-with-dependencies.jar'
@@ -76,6 +76,11 @@ def main():
         inventory = [{'file': p.name, 'sha256': digest(p)} for p in sorted(dependencies.glob('*.jar'))]
         (root/'source/dependency-inventory.json').write_text(json.dumps(inventory, indent=2)+'\n')
         shutil.copytree(repo/'examples/oci-native/live', root/'docs/public-oci-evidence', ignore=shutil.ignore_patterns('__pycache__'))
+        # Keep reference-guide relative links usable inside the offline bundle.
+        guide = (repo/'examples/oci-native/README.md').read_text()
+        guide = guide.replace('(live/', '(public-oci-evidence/').replace('(offline/README.md)', '(../README.md)')
+        (root/'docs/README.md').write_text(guide)
+        shutil.copy2(repo/'examples/oci-native/s3proxy.properties', root/'docs/s3proxy.properties')
         # Preserve packaged dependency notices plus original wheel/JRE license files.
         import zipfile
         with zipfile.ZipFile(jar) as z:
