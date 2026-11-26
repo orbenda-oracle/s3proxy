@@ -1,0 +1,20 @@
+{
+  "release": "pca-s3proxy-20261126-r1-linux-x86_64",
+  "archive_sha256": "fcf379d639072a14446a12f85cfb2f7ace3a2d8204a190d54168df583c70b6af",
+  "archive_bytes": 175853785,
+  "source_commit": "b5d8060ffae7be15de5e4489bc81dcc7081b1f68",
+  "product_commit": "875243f0119552eea04bd26abc5a4fd0f5bea2cc",
+  "checked_utc": "2026-11-26T18:04:40.311098+00:00",
+  "receipt": "PASS",
+  "file_checksums": 473,
+  "source_archive_matches_commit": true,
+  "contains_site_credentials": false,
+  "offline_wheel_install": "PASS; new venv, --no-index, seven exact wheels, pip check",
+  "package_safety_tests": 7,
+  "live_harness_safety_tests": 9,
+  "built_in_tls_launcher": "PASS with host Java17/test-only CA; unsigned403, unknown-key403, untrustedCArejected",
+  "shell_blocks_syntax_checked": 22,
+  "independent_review": "P2 findings fixed; no remaining material findings",
+  "linux_runtime_replay": "NOT_RUN; macOS preparation host, no running Linux engine",
+  "pca_onsite_acceptance": "PENDING; not deployed"
+}

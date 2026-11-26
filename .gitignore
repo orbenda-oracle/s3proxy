@@ -30,3 +30,9 @@ swift.db
 
 # Jazzer fuzzing corpus
 .cifuzz-corpus/
+
+# Live acceptance credentials and raw logs
+.private_secrets/
+
+# Python live acceptance cache
+__pycache__/

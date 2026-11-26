@@ -43,6 +43,8 @@ import org.gaul.s3proxy.blobstore.BlobStore;
 import org.gaul.s3proxy.blobstore.Constants;
 import org.gaul.s3proxy.middleware.GlobBlobStoreLocator;
 import org.gaul.s3proxy.middleware.Middlewares;
+import org.gaul.s3proxy.oci.OciNativeBlobStore;
+import org.gaul.s3proxy.oci.OciNativeUsers;
 import org.jspecify.annotations.Nullable;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -96,6 +98,7 @@ public final class Main {
         }
 
         S3Proxy.Builder s3ProxyBuilder = null;
+        var nativeUsers = new OciNativeUsers();
         var locators = ImmutableMap.<String, AccessGrant>builder();
         var globLocators = ImmutableMap
                 .<PathMatcher, GlobBlobStoreLocator.GlobTarget>builder();
@@ -115,9 +118,18 @@ public final class Main {
 
             BlobStore blobStore;
             try {
-                blobStore = createBlobStore(properties);
-                blobStore = Middlewares.wrap(blobStore, properties,
+                var rawStore = createBlobStore(properties);
+                blobStore = Middlewares.wrap(rawStore, properties,
                         Main::createBlobStore);
+                if (rawStore instanceof OciNativeBlobStore nativeStore) {
+                    if (!(blobStore instanceof OciNativeBlobStore)) {
+                        throw new IllegalArgumentException(
+                                "Native user authorization requires a direct " +
+                                "backend without middlewares");
+                    }
+                    nativeUsers.add(path, properties, nativeStore,
+                            nativeStore.nativeUserId());
+                }
             } catch (IllegalArgumentException e) {
                 System.err.println(e.getMessage());
                 System.exit(1);
@@ -214,6 +226,8 @@ public final class Main {
             s3ProxyBuilder = s3ProxyBuilder2;
         }
 
+        nativeUsers.validateConfigurationCount(options.properties.size());
+
         S3Proxy s3Proxy;
         try {
             s3Proxy = requireNonNull(s3ProxyBuilder).build();
@@ -225,7 +239,9 @@ public final class Main {
 
         var locator = locators.build();
         var globLocator = globLocators.build();
-        if (!locator.isEmpty() || !globLocator.isEmpty()) {
+        if (nativeUsers.size() > 0) {
+            s3Proxy.setBlobStoreLocator(nativeUsers);
+        } else if (!locator.isEmpty() || !globLocator.isEmpty()) {
             s3Proxy.setBlobStoreLocator(
                     new GlobBlobStoreLocator(locator, globLocator,
                             anonymousBlobStore));
@@ -318,7 +334,8 @@ public final class Main {
         properties.setProperty(Constants.PROPERTY_PROVIDER, provider);
 
         if (provider.equals("filesystem") ||
-                provider.equals("transient")) {
+                provider.equals("transient") ||
+                provider.equals("oci-native")) {
             identity = Strings.nullToEmpty(identity);
             credential = Strings.nullToEmpty(credential);
         } else if (provider.equals("google-cloud-storage")) {

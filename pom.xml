@@ -543,6 +543,16 @@ checkstyle.header.file.jclouds=src/main/config/copyright_header_jclouds.txt</pro
 
   <dependencies>
     <dependency>
+      <groupId>com.oracle.oci.sdk</groupId>
+      <artifactId>oci-java-sdk-objectstorage-generated</artifactId>
+      <version>3.103.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.oci.sdk</groupId>
+      <artifactId>oci-java-sdk-common-httpclient-jersey3</artifactId>
+      <version>3.103.0</version>
+    </dependency>
+    <dependency>
       <groupId>io.opentelemetry</groupId>
       <artifactId>opentelemetry-api</artifactId>
     </dependency>

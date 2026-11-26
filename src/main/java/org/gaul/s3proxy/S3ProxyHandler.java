@@ -715,6 +715,9 @@ public class S3ProxyHandler {
         if (name.contains(".openstackswift.")) {
             return "openstack-swift";
         }
+        if (name.contains(".oci.")) {
+            return "oci-native";
+        }
         if (name.contains(".sftp.")) {
             return "sftp";
         }
@@ -963,6 +966,9 @@ public class S3ProxyHandler {
             // unsigned request as for a signed one: a bucket assigned to a
             // store is served through that store's middlewares -- a
             // read-only one, say -- whoever is asking.
+            if (!blobStoreLocator.allowsAnonymousRequests()) {
+                throw new S3ProxyException(S3ErrorCode.ACCESS_DENIED);
+            }
             AccessGrant anonymousGrant =
                     blobStoreLocator.locateAnonymousBlobStore(
                             path.length > 1 ? path[1] : null,
@@ -6141,6 +6147,7 @@ public class S3ProxyHandler {
 
         // Providers that support native conditional writes
         boolean supportsNativeConditionalWrites =
+                blobStoreType.equals("oci-native") ||
                 blobStoreType.equals("azureblob") ||
                 blobStoreType.equals("aws-s3") ||
                 blobStoreType.equals("google-cloud-storage") ||

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: pca-s3proxy
+description: Per-user S3 gateway to native PCA or OCI Object Storage
+version: 0.1.0
+appVersion: "20261126-oke-r1"
+type: application
+kubeVersion: ">=1.25.0-0"
+home: https://github.com/orbenda-oracle/s3proxy
