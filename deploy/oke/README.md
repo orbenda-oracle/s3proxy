@@ -52,8 +52,10 @@ not certification of the site's installed PCA release.
 
 Prepare files in a protected administrator workspace (mode 0700), not in a
 Git checkout. Generate gateway keys there with `tools/gateway-key.py` from
-completed templates. For container use, **remove systemd/filesystem install
-steps**: mount the same absolute paths through the Secrets below. Keep HTTPS
+completed templates. For container use, follow only the native-user/key and PKCS#12/CA-generation
+steps in those reference guides. **Do not execute their VM account, filesystem
+installation, systemd startup or systemd rollback sections**; use this Helm/
+kubectl workflow instead. Mount the same absolute paths through the Secrets below. Keep HTTPS
 listener `https://0.0.0.0:8443`, matching allowed gateway FQDN, native user/profile
 identity and frontend keystore password in every per-user properties file.
 `native/config` must reference keys at `/etc/pca-s3proxy/native/USER.pem`.
